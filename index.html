@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Simulador Solar - RD Engenharia</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #0b2a4a;
+  padding: 20px;
+}
+
+.container {
+  max-width: 420px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  margin: auto;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.logo img {
+  max-width: 180px;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+button {
+  background: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.resultado {
+  margin-top: 15px;
+  background: #eef3ff;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.whatsapp {
+  background: #25d366;
+  font-weight: bold;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="logo">
+    <img src="logo.png" alt="RD Engenharia">
+  </div>
+
+  <h3>Simulador de Energia Solar</h3>
+
+  <input type="number" id="conta" placeholder="Valor da conta de luz (R$)">
+
+  <button onclick="simular()">Simular</button>
+
+  <div class="resultado" id="resultado"></div>
+
+</div>
+
+<script>
+function simular() {
+
+  let conta = Number(document.getElementById("conta").value);
+  if (conta <= 0) return;
+
+  let valorKwh = 1.22;
+  let geracaoPainel = 70;
+
+  let consumo = conta / valorKwh;
+  let paineisNecessarios = Math.ceil(consumo / geracaoPainel);
+
+  let paineis, valorKit;
+
+  if (paineisNecessarios <= 8) {
+    paineis = 8;
+    valorKit = 12000;
+  } else if (paineisNecessarios <= 10) {
+    paineis = 10;
+    valorKit = 14000;
+  } else if (paineisNecessarios <= 14) {
+    paineis = 14;
+    valorKit = 19000;
+  } else {
+    document.getElementById("resultado").innerHTML = `
+      <p><strong>Consumo estimado:</strong> ${consumo.toFixed(0)} kWh/mês</p>
+      <p><strong>Painéis necessários:</strong> ${paineisNecessarios}</p>
+      <p><strong>Projeto sob medida.</strong></p>
+      <a href="https://wa.me/5573999999999" target="_blank">
+        <button class="whatsapp">Consultar no WhatsApp</button>
+      </a>
+    `;
+    return;
+  }
+
+  let retornoMeses = valorKit / conta;
+  let retornoAnos = retornoMeses / 12;
+
+  document.getElementById("resultado").innerHTML = `
+    <p><strong>Consumo estimado:</strong> ${consumo.toFixed(0)} kWh/mês</p>
+    <p><strong>Kit indicado:</strong> ${paineis} painéis de 570W</p>
+    <p><strong>Geração estimada:</strong> ${(paineis * geracaoPainel).toFixed(0)} kWh/mês</p>
+    <p><strong>Valor do kit:</strong> R$ ${valorKit.toLocaleString("pt-BR")}</p>
+    <p><strong>Retorno do investimento:</strong> ${retornoAnos.toFixed(1)} anos</p>
+
+    <a href="https://wa.me/5573999999999?text=Olá,%20fiz%20uma%20simulação%20e%20quero%20mais%20informações." target="_blank">
+      <button class="whatsapp">Falar no WhatsApp</button>
+    </a>
+  `;
+}
+</script>
+
+</body>
+</html>
